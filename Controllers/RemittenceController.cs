@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using parcial.Data;
@@ -32,16 +33,40 @@ namespace parcial.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Remittance remittance)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                remittance.TransactionDate = DateTime.UtcNow;
-                remittance.Status = "Pending";
-                _context.Remittances.Add(remittance);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(remittance);
             }
 
-            return View(remittance);
+            if (remittance.Currency.Trim().ToLower() == "usd")
+            {
+                remittance.ExchangeRate = 1;
+                remittance.FinalAmount = remittance.AmountSent;
+            }
+
+            if (remittance.Currency.Trim().ToLower() == "bitcoin")
+            {
+                var btcRate = await GetBTCToUSDExchangeRate();
+                remittance.ExchangeRate = btcRate;
+                remittance.FinalAmount = remittance.AmountSent * btcRate;
+            }
+
+            remittance.Status = "Pending";
+            remittance.TransactionDate = DateTime.UtcNow;
+
+            _context.Remittances.Add(remittance);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction(nameof(Index)); ;
+        }
+
+        public async Task<decimal> GetBTCToUSDExchangeRate()
+        {
+            var client = new HttpClient();
+            var response = await client.GetStreamAsync("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+            var price = await JsonSerializer.DeserializeAsync<Dictionary<string, Dictionary<string, decimal>>>(response);
+
+            return price!["bitcoin"]["usd"];
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
