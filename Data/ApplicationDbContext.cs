@@ -14,4 +14,5 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<TransactionUSD> TransactionsUSD { get; set; }
     public DbSet<TransactionBTC> TransactionsBTC { get; set; }
     public DbSet<ConversionHistory> ConversionHistories { get; set; }
+    public DbSet<Remittance> Remittances { get; set; }
 }

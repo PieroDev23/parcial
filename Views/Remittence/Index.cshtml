@@ -1,0 +1,29 @@
+@model Remittance
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Sender Name</label>
+        <input type="text" class="form-control" asp-for="SenderName" required />
+    </div>
+    <div class="form-group">
+        <label>Recipient Name</label>
+        <input type="text" class="form-control" asp-for="RecipientName" required />
+    </div>
+    <div class="form-group">
+        <label>Origin Country</label>
+        <input type="text" class="form-control" asp-for="OriginCountry" required />
+    </div>
+    <div class="form-group">
+        <label>Destination Country</label>
+        <input type="text" class="form-control" asp-for="DestinationCountry" required />
+    </div>
+    <div class="form-group">
+        <label>Amount Sent</label>
+        <input type="number" class="form-control" asp-for="AmountSent" required />
+    </div>
+    <div class="form-group">
+        <label>Currency (USD/BTC)</label>
+        <input type="text" class="form-control" asp-for="Currency" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Send Remittance</button>
+</form>

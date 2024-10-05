@@ -1,0 +1,25 @@
+@model IEnumerable<Remittance>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sender</th>
+            <th>Recipient</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var remittance in Model)
+        {
+            <tr>
+                <td>@remittance.SenderName</td>
+                <td>@remittance.RecipientName</td>
+                <td>@remittance.AmountSent @remittance.Currency</td>
+                <td>@remittance.Status</td>
+                <td>@remittance.TransactionDate.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+</table>
