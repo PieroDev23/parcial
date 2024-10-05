@@ -1,0 +1,32 @@
+@model IEnumerable<Remittance>
+@{
+    ViewData["title"] = "list";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sender</th>
+            <th>Recipient</th>
+            <th>Amount</th>
+            <th>Final Amount</th>
+            <th>Exchange Rate</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var remittance in Model)
+        {
+            <tr>
+                <td>@remittance.SenderName</td>
+                <td>@remittance.RecipientName</td>
+                <td>@remittance.AmountSent @remittance.Currency</td>
+                <td>@remittance.FinalAmount</td>
+                <td>@remittance.ExchangeRate</td>
+                <td>@remittance.Status</td>
+                <td>@remittance.TransactionDate.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+</table>
