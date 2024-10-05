@@ -4,11 +4,8 @@ using parcial.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -35,9 +32,18 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Ruta por defecto para el controlador Home
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Ruta específica para el filtro por categoría en el catálogo
+app.MapControllerRoute(
+    name: "catalog",
+    pattern: "Catalog/{categoryId?}",
+    defaults: new { controller = "Catalog", action = "Index" }
+);
+
 app.MapRazorPages();
 
 app.Run();
